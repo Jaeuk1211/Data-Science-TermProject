@@ -36,9 +36,6 @@ pt = df[['Crime Name1', 'Start_Date_Time']]
 
 # - 를 기준으로 place를 place와 place_detail로 split
 ptd = pt.copy()
-"""
-ptd[['Place','Place_Detail']] = pt['Place'].str.split(' - ', n=1, expand=True)
-"""
 
 # : 를 기준으로 start_date_time을 start_date, start_time, start_ampm으로 split
 ptd[['Start_Date','Start_Time','Start_AMPM']] = pt['Start_Date_Time'].str.split(' ', n=2, expand=True)
@@ -48,10 +45,6 @@ ptdd = ptd.copy()
 ptdd[['Start_Month','Start_Day','Start_Year']] = ptd['Start_Date'].str.split('/', n=2, expand=True)
 ptdd[['Start_Hour','Minute','Second']] = ptd['Start_Time'].str.split(':', n=2, expand=True)
 
-"""
-# place_detail의 missing value를 같은 row의 place로
-ptdd['Place_Detail'] = np.where(pd.notnull(ptdd['Place_Detail']) == True, ptdd['Place_Detail'], ptdd['Place'])
-"""
 
 # feature engineering
 ptdd.drop(['Start_Date_Time','Start_Date','Start_Time','Start_Year','Start_Day','Minute','Second'], axis=1, inplace=True)
@@ -94,8 +87,6 @@ label = preprocessing.LabelEncoder()
 
 ptdd['Start_Month'] = label.fit_transform(ptdd['Start_Month'])
 ptdd['Start_Hour'] = label.fit_transform(ptdd['Start_Hour'])
-
-# ptdd['Place_Detail'] = label.fit_transform(ptdd['Place_Detail'])
 
 ptdd = ptdd[['Start_Month', 'Start_Hour', 'Crime Name1']]
 
