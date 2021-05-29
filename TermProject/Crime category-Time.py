@@ -126,7 +126,6 @@ def predict_classification(train, test_row, num_neighbors):
 	prediction = max(set(output_values), key=output_values.count)
 	return prediction
 
-#test
 # Result
 print('print the distance of each row')
 for row in dfn:
