@@ -49,13 +49,6 @@ def predict_classification(train, test_row, num_neighbors):
 	return prediction
 
 # Result
-print('print the distance of each row')
-for row in df:
-	distance = euclidean_distance(test, row)
-print()
-print()
 print('k=5, List the 5 nearest')
 prediction = predict_classification(df, test, 5)
-print()
-print()
 print('The Prediction is %s.' % (prediction))
