@@ -109,6 +109,15 @@ lls['Latitude'] = df['Latitude']
 lls['Longitude'] = df['Longitude']
 lls.drop(['Start_Month','Place_Detail','Police District Number'], axis=1, inplace=True)
 
+### Police District Number = 3D
+d3 = ptdd.copy()
+d3['Crime Name1'] = df['Crime Name1']
+d3 = d3[d3['Police District Number']=='3D']
+d3.drop(['Place_Detail', 'Start_Month','Police District Number'], axis=1, inplace=True)
+
+
+
+
 """
 ##########################################
 # Scatter Plot
