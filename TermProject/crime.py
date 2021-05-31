@@ -19,11 +19,12 @@ pd.set_option('display.max_columns', 10)
 
 # read csv file
 df = pd.read_csv("C:\\Users\\82109\\OneDrive\\문서\\software\\3-1\\data science\\Termproject\\Crime.csv")
-'''
+
 # missing value 확인
 print(df.isna().sum())
 print()
-'''
+
+
 # Dispatch Date/Time의 missing value를 같은 row의 Start_Date_Time으로
 # End_Date_Time은 같은 row의 Start_Date_Time으로
 df['Dispatch Date / Time'] = np.where(pd.notnull(df['Dispatch Date / Time']) == True, df['Dispatch Date / Time'], df['Start_Date_Time'])
@@ -99,18 +100,62 @@ css.drop(['Start_Month','Place_Detail','Police District Number'], axis=1, inplac
 css.dropna(axis=0, inplace=True)
 
 ### Third dataset
+# Latitude, Longitude, Start_Hour
+# Target : Start_Hour
+lls = ptdd.copy()
+lls['Latitude'] = df['Latitude']
+lls['Longitude'] = df['Longitude']
+lls.drop(['Start_Month','Place_Detail','Police District Number'], axis=1, inplace=True)
 
 
 
 
+'''
+##### bar chart
+crime_name = sns.countplot(x='Crime Name1', data=df, order=df['Crime Name1'].value_counts().index)
+crime_name.set_title('Number of crime name', fontsize=15)
+plt.setp(crime_name.get_xticklabels(),fontsize=6)
+plt.show()
+
+df['Crime Name2'].dropna(axis=0, inplace=True)
+name2 = sns.countplot(y='Crime Name2', data=df, order=df['Crime Name2'].value_counts().index)
+name2.set_title('Number of crime name', fontsize=15)
+plt.setp(name2.get_yticklabels(),fontsize=5)
+plt.show()
+
+month = sns.countplot(x='Start_Month', data=ptdd, order=ptdd['Start_Month'].value_counts().index)
+month.set_title('Number of crime month', fontsize=15)
+plt.show()
+
+time = sns.countplot(x='Start_Hour', data=ptdd, order=ptdd['Start_Hour'].value_counts().index)
+time.set_title('Number of crime time zone', fontsize=15)
+plt.show()
+
+df['City'].dropna(axis=0, inplace=True)
+city = sns.countplot(y='City', data=df, order=df['City'].value_counts().index)
+city.set_title('Number of crime city', fontsize=15)
+plt.setp(city.get_yticklabels(),fontsize=5)
+plt.show()
+
+place_de = sns.countplot(y='Place_Detail', data=ptdd, order=ptdd['Place_Detail'].value_counts().index)
+place_de.set_title('Number of crime place', fontsize=15)
+plt.setp(place_de.get_yticklabels(),fontsize=5)
+plt.show()
+
+police = sns.countplot(x='Police District Number', data=df, order=df['Police District Number'].value_counts().index)
+police.set_title('Number of crime police district number', fontsize=15)
+plt.show()
+'''
 
 
+### Function definition
 
 # Label Encoding
 def label(col):
     encoder = preprocessing.LabelEncoder()
     col = encoder.fit_transform(col)
-    return col
+    cg = encoder.classes_
+    return col, cg
 
 # Ordinal Encoding
 def ordinal(col):
@@ -146,7 +191,7 @@ def knn(x_train, x_test, y_train, y_test, n):
     knn.fit(x_train, y_train)
     predict = knn.predict(x_test)
     score = knn.score(x_test, y_test)
-    print(score)
+    print('KNN test accuracy : ', score)
     print()
 
 
@@ -170,27 +215,30 @@ def kfold(n, split, x, y):
     print('scores mean : {}'.format(np.mean(score)))
     print()
 
+# Random Forest
+def forest(x_train, x_test, y_train, y_test):
+    rf = RandomForestClassifier(max_depth = 8,
+                                  max_features = 3,
+                                  min_samples_split = 5,
+                                  n_estimators = 100)
 
-# Gradient Boosting
-def boosting(x_train, x_test, y_train, y_test):
-    regressor = GradientBoostingClassifier(max_depth=3, n_estimators=100, learning_rate=0.1)
-    regressor.fit(x_train, y_train)
-    predict = regressor.predict(x_test)
-    print(predict)
-    score = regressor.score(x_test, y_test)
-    print(score)
+    rf.fit(x_train, y_train)
+    y_pred = rf.predict(x_test)
+    print("RandomForestClassifier test accuracy : ", rf.score(x_test,y_test))
     print()
-    
-  
+
 
 
 
 ### First dataset
+print('***** Predict place with month, hour, police district number *****')
+print()
 
 ## Label encoding
-ptdd['Place_Detail'] = label(ptdd['Place_Detail'])
-ptdd['Start_Hour'] = label(ptdd['Start_Hour'])
-ptdd['Police District Number'] = label(ptdd['Police District Number'])
+print('*** Label encoding ***')
+ptdd['Place_Detail'], place_cg = label(ptdd['Place_Detail'])
+ptdd['Start_Hour'], hour_cg = label(ptdd['Start_Hour'])
+ptdd['Police District Number'], pol_cg = label(ptdd['Police District Number'])
 
 X = ptdd[['Start_Hour', 'Start_Month', 'Police District Number']]
 y = ptdd['Place_Detail']
@@ -199,19 +247,26 @@ X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.01, random_
 kfold(100, 10, X, y)
 
 # Standard
+print('** Standard Scaling **')
 X_train_scale, X_test_scale = standard(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+print('** MinMax Scaling **')
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+print('** Robust Scaling **')
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 
 ## Ordinal encoding
+print('*** Ordinal encoding ***')
 ptdd['Place_Detail'] = ordinal(ptdd['Place_Detail'])
 ptdd['Start_Hour'] = ordinal(ptdd['Start_Hour'])
 ptdd['Police District Number'] = ordinal(ptdd['Police District Number'])
@@ -223,23 +278,32 @@ X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.01, random_
 kfold(100, 10, X, y)
 
 # Standard
+print('** Standard Scaling **')
 X_train_scale, X_test_scale = standard(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+print('** MinMax Scaling **')
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+print('** Robust Scaling **')
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 
 
 
 ### Second dataset
+print('***** Predict Crime type with hour, state *****')
+print()
 
 ## label encoding
+print('*** Label encoding ***')
 css['Start_Hour'] = label(css['Start_Hour'])
 css['Crime Name1'] = label(css['Crime Name1'])
 css['State'] = label(css['State'])
@@ -251,19 +315,26 @@ X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.01, random_
 kfold(100, 10, X, y)
 
 # Standard
+print('** Standard Scaling **')
 X_train_scale, X_test_scale = standard(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+print('** MinMax Scaling **')
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+print('** Robust Scaling **')
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 
 ## Ordinal encoding
+print('*** Ordinal encoding ***')
 css['Start_Hour'] = ordinal(css['Start_Hour'])
 css['Crime Name1'] = ordinal(css['Crime Name1'])
 css['State'] = ordinal(css['State'])
@@ -275,21 +346,86 @@ X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.01, random_
 kfold(100, 10, X, y)
 
 # Standard
+print('** Standard Scaling **')
 X_train_scale, X_test_scale = standard(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+print('** MinMax Scaling **')
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+print('** Robust Scaling **')
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 
 
 
+### Third dataset
+print('***** Predict Crime time zone with latitude, longitude *****')
+print()
 
+## Label encoding
+print('*** Label encoding ***')
+lls['Start_Hour'] = label(lls['Start_Hour'])
+
+X = lls[['Latitude','Longitude']]
+y = lls['Start_Hour']
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.01, random_state=0, shuffle=True)
+
+kfold(100, 10, X, y)
+
+# Standard
+print('** Standard Scaling **')
+X_train_scale, X_test_scale = standard(X_train, X_test)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
+
+# MinMax
+print('** MinMax Scaling **')
+X_train_scale, X_test_scale = minmax(X_train, X_test)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
+
+# Robust
+print('** Robust Scaling **')
+X_train_scale, X_test_scale = robust(X_train, X_test)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
+
+
+## Ordinal encoding
+print('*** Ordinal encoding ***')
+lls['Start_Hour'] = ordinal(lls['Start_Hour'])
+
+X = lls[['Latitude','Longitude']]
+y = lls['Start_Hour']
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.01, random_state=0, shuffle=True)
+
+kfold(100, 10, X, y)
+
+# Standard
+print('** Standard Scaling **')
+X_train_scale, X_test_scale = standard(X_train, X_test)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
+
+# MinMax
+print('** MinMax Scaling **')
+X_train_scale, X_test_scale = minmax(X_train, X_test)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
+
+# Robust
+print('** Robust Scaling **')
+X_train_scale, X_test_scale = robust(X_train, X_test)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
+forest(X_train_scale, X_test_scale, y_train, y_test)
 
 
 
