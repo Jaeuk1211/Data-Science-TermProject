@@ -18,7 +18,7 @@ pd.set_option('display.max_columns', 10)
 
 
 # read csv file
-df = pd.read_csv("C:\\Users\\82109\\OneDrive\\문서\\software\\3-1\\data science\\Termproject\\Crime.csv")
+df = pd.read_csv("TermProject/Crime.csv")
 
 # missing value 확인
 print(df.isna().sum())
@@ -108,6 +108,7 @@ lls['Longitude'] = df['Longitude']
 lls.drop(['Start_Month','Place_Detail','Police District Number'], axis=1, inplace=True)
 
 
+<<<<<<< HEAD
 ### Police District Number = 3D
 d3 = ptdd.copy()
 d3['Crime Name1'] = df['Crime Name1']
@@ -117,6 +118,44 @@ d3.drop(['Place_Detail', 'Start_Month','Police District Number'], axis=1, inplac
 
 
 
+=======
+##########################################
+# Scatter Plot
+
+# drop the 0 value
+sc = df[['Latitude', 'Longitude', 'Crime Name1']]
+sc = sc[sc['Latitude'] != 0]
+sc = sc[sc['Longitude'] != 0]
+
+# drop the nan value
+sc.dropna(axis=0, inplace=True)
+
+# Classify Dataframes by the Crime category
+property = sc.copy()
+person = sc.copy()
+society = sc.copy()
+other = sc.copy()
+
+property = sc[sc['Crime Name1'] == 'Crime Against Property']
+person = sc[sc['Crime Name1'] == 'Crime Against Person']
+society = sc[sc['Crime Name1'] == 'Crime Against Society']
+other = sc[sc['Crime Name1'] == 'Other']
+
+# plot data size = 1/100
+property = property.loc[:2500,:]
+person = person.loc[:2500,:]
+society = society.loc[:2500,:]
+other = other.loc[:2500,:]
+
+# Plot the Scatter
+plt.scatter(property['Latitude'], property['Longitude'], label='property',c='r')
+plt.scatter(person['Latitude'], person['Longitude'], label='person',c='g')
+plt.scatter(society['Latitude'], society['Longitude'], label='society',c='b')
+plt.scatter(other['Latitude'], other['Longitude'], label='other',c='yellow')
+plt.xlabel('Latitude')
+plt.ylabel('Longitude')
+plt.show()
+>>>>>>> 33dda5edc3e459c2a85dff616fc028ceb0ace733
 
 
 ##### bar chart
