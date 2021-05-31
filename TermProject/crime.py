@@ -24,6 +24,8 @@ df = pd.read_csv("TermProject/Crime.csv")
 print(df.isna().sum())
 print()
 
+df = df[df['Latitude'] != 0]
+df = df[df['Longitude'] != 0]
 
 # Dispatch Date/Time의 missing value를 같은 row의 Start_Date_Time으로
 # End_Date_Time은 같은 row의 Start_Date_Time으로
@@ -107,21 +109,11 @@ lls['Latitude'] = df['Latitude']
 lls['Longitude'] = df['Longitude']
 lls.drop(['Start_Month','Place_Detail','Police District Number'], axis=1, inplace=True)
 
-
-<<<<<<< HEAD
-### Police District Number = 3D
-d3 = ptdd.copy()
-d3['Crime Name1'] = df['Crime Name1']
-d3 = d3[d3['Police District Number']=='3D']
-d3.drop(['Place_Detail', 'Start_Month','Police District Number'], axis=1, inplace=True)
-
-
-
-
-=======
+"""
 ##########################################
 # Scatter Plot
 
+# 1.Whole data by crime name
 # drop the 0 value
 sc = df[['Latitude', 'Longitude', 'Crime Name1']]
 sc = sc[sc['Latitude'] != 0]
@@ -154,8 +146,51 @@ plt.scatter(society['Latitude'], society['Longitude'], label='society',c='b')
 plt.scatter(other['Latitude'], other['Longitude'], label='other',c='yellow')
 plt.xlabel('Latitude')
 plt.ylabel('Longitude')
+plt.legend()
 plt.show()
->>>>>>> 33dda5edc3e459c2a85dff616fc028ceb0ace733
+
+# 2. Whole data & 3D district
+threed = df[['Latitude', 'Longitude', 'Police District Number','Crime Name1']]
+
+threed = threed[threed['Police District Number'] == '3D']
+
+# Plot the Scatter
+plt.scatter(df['Latitude'], df['Longitude'], label='property',c='b')
+plt.scatter(threed['Latitude'], threed['Longitude'], label='society',c='r')
+plt.xlabel('Latitude')
+plt.ylabel('Longitude')
+plt.show()
+
+# 3. 3D district data by crime name
+# Classify Dataframes by the Crime category
+property = threed.copy()
+person = threed.copy()
+society = threed.copy()
+other = threed.copy()
+
+property = threed[threed['Crime Name1'] == 'Crime Against Property']
+person = threed[threed['Crime Name1'] == 'Crime Against Person']
+society = threed[threed['Crime Name1'] == 'Crime Against Society']
+other = threed[threed['Crime Name1'] == 'Other']
+
+# plot data size = 1/100
+property = property.loc[:2500,:]
+person = person.loc[:2500,:]
+society = society.loc[:2500,:]
+other = other.loc[:2500,:]
+
+# Plot the Scatter
+plt.scatter(property['Latitude'], property['Longitude'], label='property',c='r')
+plt.scatter(person['Latitude'], person['Longitude'], label='person',c='g')
+plt.scatter(society['Latitude'], society['Longitude'], label='society',c='b')
+plt.scatter(other['Latitude'], other['Longitude'], label='other',c='yellow')
+plt.legend()
+plt.xlabel('Latitude')
+plt.ylabel('Longitude')
+plt.show()
+
+
+
 
 
 ##### bar chart
@@ -192,7 +227,7 @@ plt.show()
 police = sns.countplot(x='Police District Number', data=df, order=df['Police District Number'].value_counts().index)
 police.set_title('Number of crime police district number', fontsize=15)
 plt.show()
-
+"""
 
 
 ### Function definition
@@ -265,7 +300,7 @@ def kfold(n, split, x, y):
 # Random Forest
 def forest(x_train, x_test, y_train, y_test):
     rf = RandomForestClassifier(max_depth = 8,
-                                  max_features = 3,
+                                  max_features = 2,
                                   min_samples_split = 5,
                                   n_estimators = 100)
 
@@ -322,9 +357,9 @@ print()
 
 ## Ordinal encoding
 print('*** Ordinal encoding ***')
-ptdd['Place_Detail'] = ordinal(ptdd['Place_Detail'])
-ptdd['Start_Hour'] = ordinal(ptdd['Start_Hour'])
-ptdd['Police District Number'] = ordinal(ptdd['Police District Number'])
+ptdd['Place_Detail'] = ordinal(ptdd[['Place_Detail']])
+ptdd['Start_Hour'] = ordinal(ptdd[['Start_Hour']])
+ptdd['Police District Number'] = ordinal(ptdd[['Police District Number']])
 
 X = ptdd[['Start_Hour', 'Start_Month', 'Police District Number']]
 y = ptdd['Place_Detail']
@@ -404,9 +439,9 @@ print()
 
 ## Ordinal encoding
 print('*** Ordinal encoding ***')
-css['Start_Hour'] = ordinal(css['Start_Hour'])
-css['Crime Name1'] = ordinal(css['Crime Name1'])
-css['State'] = ordinal(css['State'])
+css['Start_Hour'] = ordinal(css[['Start_Hour']])
+css['Crime Name1'] = ordinal(css[['Crime Name1']])
+css['State'] = ordinal(css[['State']])
 
 X = css[['Start_Hour','State']]
 y = css['Crime Name1']
@@ -485,7 +520,7 @@ print()
 
 ## Ordinal encoding
 print('*** Ordinal encoding ***')
-lls['Start_Hour'] = ordinal(lls['Start_Hour'])
+lls['Start_Hour'] = ordinal(lls[['Start_Hour']])
 
 X = lls[['Latitude','Longitude']]
 y = lls['Start_Hour']
@@ -517,7 +552,6 @@ knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 print()
 forest(X_train_scale, X_test_scale, y_train, y_test)
 print()
-
 
 
 ### 3D

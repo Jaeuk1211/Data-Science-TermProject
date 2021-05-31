@@ -13,27 +13,37 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 
 # read the data
-path = '/Users/jaeuk/Desktop/python/TermProject/Crime.csv'
+path = 'TermProject/Crime.csv'
 df = pd.read_csv(path)
 
 # drop the 0 value
-sc = df[['Latitude', 'Longitude', 'Crime Name1']]
-sc = sc[sc['Latitude'] != 0]
-sc = sc[sc['Longitude'] != 0]
+df = df[df['Latitude'] != 0]
+df = df[df['Longitude'] != 0]
+
+threed = df[['Latitude', 'Longitude', 'Police District Number','Crime Name1']]
 
 # drop the nan value
-sc.dropna(axis=0, inplace=True)
+threed.dropna(axis=0, inplace=True)
+
+threed = threed[threed['Police District Number'] == '3D']
+
+# Plot the Scatter
+plt.scatter(df['Latitude'], df['Longitude'], label='property',c='b')
+plt.scatter(threed['Latitude'], threed['Longitude'], label='society',c='r')
+plt.xlabel('Latitude')
+plt.ylabel('Longitude')
+plt.show()
 
 # Classify Dataframes by the Crime category
-property = sc.copy()
-person = sc.copy()
-society = sc.copy()
-other = sc.copy()
+property = threed.copy()
+person = threed.copy()
+society = threed.copy()
+other = threed.copy()
 
-property = sc[sc['Crime Name1'] == 'Crime Against Property']
-person = sc[sc['Crime Name1'] == 'Crime Against Person']
-society = sc[sc['Crime Name1'] == 'Crime Against Society']
-other = sc[sc['Crime Name1'] == 'Other']
+property = threed[threed['Crime Name1'] == 'Crime Against Property']
+person = threed[threed['Crime Name1'] == 'Crime Against Person']
+society = threed[threed['Crime Name1'] == 'Crime Against Society']
+other = threed[threed['Crime Name1'] == 'Other']
 
 # plot data size = 1/100
 property = property.loc[:2500,:]
@@ -46,9 +56,7 @@ plt.scatter(property['Latitude'], property['Longitude'], label='property',c='r')
 plt.scatter(person['Latitude'], person['Longitude'], label='person',c='g')
 plt.scatter(society['Latitude'], society['Longitude'], label='society',c='b')
 plt.scatter(other['Latitude'], other['Longitude'], label='other',c='yellow')
-
+plt.legend()
 plt.xlabel('Latitude')
 plt.ylabel('Longitude')
 plt.show()
-
-
