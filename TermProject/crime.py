@@ -186,7 +186,7 @@ def robust(train, test):
 
 
 # K-Nearest Neighbors
-def knn(x_train, x_test, y_train, y_test, n, lab):
+def knn(x_train, x_test, y_train, y_test, n):
     knn = KNeighborsClassifier(n_neighbors=n)
     knn.fit(x_train, y_train)
     predict = knn.predict(x_test)
@@ -249,7 +249,7 @@ kfold(100, 10, X, y)
 # Standard
 print('** Standard Scaling **')
 X_train_scale, X_test_scale = standard(X_train, X_test)
-knn(X_train_scale, X_test_scale, y_train, y_test, 100, place_cg)
+knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
