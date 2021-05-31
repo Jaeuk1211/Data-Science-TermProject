@@ -110,7 +110,7 @@ lls.drop(['Start_Month','Place_Detail','Police District Number'], axis=1, inplac
 
 
 
-
+'''
 ##### bar chart
 crime_name = sns.countplot(x='Crime Name1', data=df, order=df['Crime Name1'].value_counts().index)
 crime_name.set_title('Number of crime name', fontsize=15)
@@ -145,7 +145,7 @@ plt.show()
 police = sns.countplot(x='Police District Number', data=df, order=df['Police District Number'].value_counts().index)
 police.set_title('Number of crime police district number', fontsize=15)
 plt.show()
-
+'''
 
 
 ### Function definition
@@ -254,13 +254,13 @@ forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
 print('** MinMax Scaling **')
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
 print('** Robust Scaling **')
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
@@ -285,13 +285,13 @@ forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
 print('** MinMax Scaling **')
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
 print('** Robust Scaling **')
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
@@ -322,13 +322,13 @@ forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
 print('** MinMax Scaling **')
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
 print('** Robust Scaling **')
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
@@ -353,13 +353,13 @@ forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
 print('** MinMax Scaling **')
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
 print('** Robust Scaling **')
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
@@ -388,13 +388,13 @@ forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
 print('** MinMax Scaling **')
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
 print('** Robust Scaling **')
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
@@ -417,13 +417,13 @@ forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # MinMax
 print('** MinMax Scaling **')
-X_train_scale, X_test_scale = MinMax(X_train, X_test)
+X_train_scale, X_test_scale = minmax(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
 # Robust
 print('** Robust Scaling **')
-X_train_scale, X_test_scale = Robust(X_train, X_test)
+X_train_scale, X_test_scale = robust(X_train, X_test)
 knn(X_train_scale, X_test_scale, y_train, y_test, 100)
 forest(X_train_scale, X_test_scale, y_train, y_test)
 
