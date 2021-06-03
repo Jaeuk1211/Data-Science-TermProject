@@ -118,7 +118,6 @@ d3.drop(['Place_Detail', 'Start_Month','Police District Number'], axis=1, inplac
 
 
 
-"""
 ##########################################
 # Scatter Plot
 
@@ -236,7 +235,7 @@ plt.show()
 police = sns.countplot(x='Police District Number', data=df, order=df['Police District Number'].value_counts().index)
 police.set_title('Number of crime police district number', fontsize=15)
 plt.show()
-"""
+
 
 
 ### Function definition
